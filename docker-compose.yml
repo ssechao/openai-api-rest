@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web-proxy-api:
+    build: .
+    container_name: web-proxy-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - LOG_LEVEL=info
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+    volumes:
+      - ./logs:/usr/src/app/logs
+    restart: unless-stopped
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    driver: bridge
